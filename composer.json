@@ -1,0 +1,38 @@
+{
+	"name": "srdev93/visitlog",
+	"keywords": [
+		"laravel",
+		"log",
+		"visitor",
+		"ip"
+	],
+	"description": "Laravel package to log visitor information into database.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+            "name": "sajad Rahmani",
+            "email": "sst.sajad.e@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=7.0",
+		"illuminate/support": "~5|~6|~7|~8|~9|~10"
+	},
+	"autoload": {
+		"psr-4": {
+			"SrDev93\\VisitLog\\": "src/"
+		}
+	},
+	"minimum-stability": "stable",
+	"extra": {
+		"laravel": {
+			"providers": [
+				"SrDev93\\VisitLog\\VisitLogServiceProvider"
+			],
+			"aliases": {
+				"VisitLog": "SrDev93\\VisitLog\\Facades\\VisitLog"
+			}
+		}
+	}
+}
