@@ -115,54 +115,60 @@
                     <tbody>
 
                     @foreach($visitlogs as $key => $visitlog)
-                        <tr>
-                            <td>{{$key + 1}}</td>
-                            <td>{{$visitlog->ip}}</td>
-                            <td>{{$visitlog->browser}}</td>
-                            <td>{{$visitlog->os}}</td>
-{{--                            @if (config('visitlog.log_user'))--}}
-{{--                                <td>{{optional($visitlog->user)->name}}</td>--}}
-{{--                            @endif--}}
-                            <td>@if($visitlog->category_id) {{$visitlog->category->name}} @endif</td>
-                            <td>@if($visitlog->product_id) {{$visitlog->product->name}} @endif</td>
-                            <td>{{$visitlog->country}}</td>
-                            <td>{{$visitlog->countryCode}}</td>
-                            <td>{{$visitlog->region}}</td>
-                            <td>{{$visitlog->regionName}}</td>
-                            <td>{{$visitlog->city}}</td>
-                            <td>{{$visitlog->zip}}</td>
-                            <td>{{$visitlog->timezone}}</td>
-                            <td>{{$visitlog->lat}}, {{$visitlog->lon}}</td>
-                            <td title="{{$visitlog->updated_at}}">{{$visitlog->last_visit}}</td>
-                            @if (config('visitlog.ban_user_ip_button'))
-                                <td align="center">
-                                    <a title="Ban"
-                                       class="
-                                        @if($visitlog->is_banned)confirm-ban text-success @else confirm-ban text-danger @endif"
-                                       data-label="Visit Log"
-                                       rel="{{ route('__ban_or_unban_user_ip__', ['id' => $visitlog->id]) }}"
-                                       href="javascript:void(0);">
-                                        @if($visitlog->is_banned)
-                                            <b class="glyphicon glyphicon-ok text-success"></b>
+                        @if($visitlog->category or $visitlog->product)
+                            <tr>
+                                <td>{{$key + 1}}</td>
+                                <td>{{$visitlog->ip}}</td>
+                                <td>{{$visitlog->browser}}</td>
+                                <td>{{$visitlog->os}}</td>
+    {{--                            @if (config('visitlog.log_user'))--}}
+    {{--                                <td>{{optional($visitlog->user)->name}}</td>--}}
+    {{--                            @endif--}}
+                                <td>@if($visitlog->category_id) {{$visitlog->category->name}} @endif</td>
+                                <td>@if($visitlog->product_id) {{$visitlog->product->name}} @endif</td>
+                                <td>{{$visitlog->country}}</td>
+                                <td>{{$visitlog->countryCode}}</td>
+                                <td>{{$visitlog->region}}</td>
+                                <td>{{$visitlog->regionName}}</td>
+                                <td>{{$visitlog->city}}</td>
+                                <td>{{$visitlog->zip}}</td>
+                                <td>{{$visitlog->timezone}}</td>
+                                <td>{{$visitlog->lat}}, {{$visitlog->lon}}</td>
+                                <td title="{{$visitlog->updated_at}}">{{$visitlog->last_visit}}</td>
+                                @if (config('visitlog.ban_user_ip_button'))
+                                    <td align="center">
+                                        <a title="Ban"
+                                           class="
+                                            @if($visitlog->is_banned)confirm-ban text-success @else confirm-ban text-danger @endif"
+                                           data-label="Visit Log"
+                                           rel="{{ route('__ban_or_unban_user_ip__', ['id' => $visitlog->id]) }}"
+                                           href="javascript:void(0);">
+                                            @if($visitlog->is_banned)
+                                                <b class="glyphicon glyphicon-ok text-success"></b>
 
-                                        @else
-                                            <b class="glyphicon glyphicon-remove"></b>
-                                        @endif
-                                    </a>
-                                </td>
-                            @endif
-                            @if (config('visitlog.delete_log_button'))
-                                <td align="center">
-                                    <a title="Delete"
-                                       class="confirm-delete text-danger"
-                                       data-label="Visit Log"
-                                       rel="{{route('__delete_visitlog__', ['id'=>$visitlog->id])}}"
-                                       href="javascript:void(0);">
-                                        <b class="glyphicon glyphicon-trash"></b>
-                                    </a>
-                                </td>
-                            @endif
-                        </tr>
+                                            @else
+                                                <b class="glyphicon glyphicon-remove"></b>
+                                            @endif
+                                        </a>
+                                    </td>
+                                @endif
+                                @if (config('visitlog.delete_log_button'))
+                                    <td align="center">
+                                        <a title="Delete"
+                                           class="confirm-delete text-danger"
+                                           data-label="Visit Log"
+                                           rel="{{route('__delete_visitlog__', ['id'=>$visitlog->id])}}"
+                                           href="javascript:void(0);">
+                                            <b class="glyphicon glyphicon-trash"></b>
+                                        </a>
+                                    </td>
+                                @endif
+                            </tr>
+                        @else
+                            @php
+                                $visitlog->delete();
+                            @endphp
+                        @endif
                     @endforeach
                     </tbody>
                 @else
