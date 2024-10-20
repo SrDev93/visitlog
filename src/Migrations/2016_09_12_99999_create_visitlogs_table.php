@@ -15,6 +15,7 @@ class CreateVisitLogsTable extends Migration
     {
         Schema::create('visitlogs', function (Blueprint $table) {
             $table->increments('id');
+            $table->morphs('visitable');
             $table->string('ip')->default('0.0.0.0');
             $table->string('browser')->nullable();
             $table->string('os')->nullable();

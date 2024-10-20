@@ -11,24 +11,7 @@ class VisitLog extends Model
 {
     protected $table = 'visitlogs';
 
-    protected $fillable = [
-        'ip',
-        'browser',
-        'os',
-        'user_id',
-        'category_id',
-        'product_id',
-        'country',
-        'countryCode',
-        'region',
-        'regionName',
-        'city',
-        'zip',
-        'timezone',
-        'lat',
-        'lon',
-        'is_banned'
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * Mutator that appends in query resultsets as though it is part of db table
@@ -58,13 +41,8 @@ class VisitLog extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function category()
+    public function visitable()
     {
-        return $this->belongsTo(Category::class, 'category_id');
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->morphTo();
     }
 }

@@ -2,8 +2,6 @@
 
 namespace SrDev93\VisitLog;
 
-use App\Models\Category;
-use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -34,11 +32,7 @@ class VisitLog
         $data = $this->getData($type , $id);
 
         if (config('visitlog.unique')) {
-            if ($type == 'product') {
-                $model = VisitLogModel::where('ip', $this->getUserIP())->where('product_id', $id)->whereDate('created_at', Carbon::today())->first();
-            }else{
-                $model = VisitLogModel::where('ip', $this->getUserIP())->where('category_id', $id)->whereDate('created_at', Carbon::today())->first();
-            }
+            $model = VisitLogModel::where('ip', $this->getUserIP())->where('visitable_type', $type)->where('visitable_id', $id)->whereDate('created_at', Carbon::today())->first();
 
             if ($model) {
                 // update record of same IP eg new visit times, etc
@@ -47,18 +41,15 @@ class VisitLog
             }
         }
 
-        if ($type == 'product'){
-            $item = Product::find($id);
-        }else{
-            $item = Category::find($id);
-        }
+        $item = $type::find($id);
         if ($item){
             $item->timestamps = false;
-            $item->increment('visit_count');
+            $item->increment('visit');
             $item->save();
         }
 
-        return VisitLogModel::create($data);
+//        return VisitLogModel::create($data);\
+        return $item->visits()->save(new VisitLogModel($data));
     }
 
     /**
@@ -124,8 +115,8 @@ class VisitLog
             'ip' => $ip,
             'browser' => $this->getBrowserInfo(),
             'os' => $this->browser->getPlatform() ?: 'Unknown',
-            'product_id' => ($type == 'product'?$id:null),
-            'category_id' => ($type == 'category'?$id:null),
+            'visitable_type' => $type,
+            'visitable_id' => $id,
         ];
 
         // info from http://freegeoip.net
